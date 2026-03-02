@@ -33,4 +33,11 @@ copy binary to /bin/
 2. libX11.dev
 3. libXtst 
 4. libxcursor
-
+### Usage
+#### Keybinds
+* minus -> decrease brightness
+* plus/equal -> increase brightness
+* 0 -> decrease brightness
+* 1 -> increase brightness
+* [ -> go left
+* ] -> go right

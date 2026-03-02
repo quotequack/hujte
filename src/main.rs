@@ -20,6 +20,10 @@ fn main() {
         let mut pressed: Option<u8> = None;
         if window.is_key_pressed(Key::Key1, minifb::KeyRepeat::No) { pressed = Some(1); }
         if window.is_key_pressed(Key::Key0, minifb::KeyRepeat::No) { pressed = Some(0); }
+        if window.is_key_pressed(Key::LeftBracket, minifb::KeyRepeat::Yes) { cursor -= 1; if cursor >= GRID * GRID { cursor = 0; } }
+        if window.is_key_pressed(Key::RightBracket, minifb::KeyRepeat::Yes) { cursor += 1; if cursor >= GRID * GRID { cursor = 0; } }
+        if window.is_key_pressed(Key::Equal, minifb::KeyRepeat::No) { pressed = Some(1); }
+        if window.is_key_pressed(Key::Minus, minifb::KeyRepeat::No) { pressed = Some(0); }
 
         if let Some(bit) = pressed {
             grid_bits[cursor].push(bit);
@@ -33,7 +37,18 @@ fn main() {
                 let idx = py * GRID + px;
 
                 let color = if idx == cursor {
-                    0xFF6600 // orange cursor
+                    let bits = &grid_bits[idx];
+                    if bits.is_empty() {
+                        0xFF6600
+                    } else {
+                        let mut n: u64 = 0;
+                        for &b in bits.iter() {
+                            n = (n << 1) | b as u64;
+                        }
+                        let brightness = calculate_one(n);
+                        let v = (brightness * 255.0) as u32;
+                        (v << 16) | (v << 4) | v
+                    }
                 } else {
                     let bits = &grid_bits[idx];
                     if bits.is_empty() {
