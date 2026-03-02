@@ -26,6 +26,7 @@
             ];
             nativeBuildInputs = [ pkgs.pkg-config pkgs.makeWrapper ];
 	    cargoHash = "";
+        };
 
         devShells."x86_64-linux".default= pkgs.mkShell {
             buildInputs = [
