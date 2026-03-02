@@ -20,9 +20,12 @@
 
         devShells."x86_64-linux".default= pkgs.mkShell {
             buildInputs = [
-                pkgs.rustc 
-                pkgs.cargo
+                pkgs.libXi
+                pkgs.libX11.dev 
+                pkgs.libXtst
                 pkgs.libxcursor
+                pkgs.rustc
+                pkgs.cargo
             ];
             nativeBuildInputs = [ pkgs.pkg-config ];
             env.RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
