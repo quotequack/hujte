@@ -17,17 +17,26 @@ fn main() {
         let cell_w = w / GRID;
         let cell_h = h / GRID;
 
+        let mut visible: bool = true;
         let mut pressed: Option<u8> = None;
         if window.is_key_pressed(Key::Key1, minifb::KeyRepeat::No) { pressed = Some(1); }
         if window.is_key_pressed(Key::Key0, minifb::KeyRepeat::No) { pressed = Some(0); }
-        if window.is_key_pressed(Key::LeftBracket, minifb::KeyRepeat::Yes) { cursor -= 1; if cursor >= GRID * GRID { cursor = 0; } }
+        if window.is_key_pressed(Key::LeftBracket, minifb::KeyRepeat::Yes) {
+            if cursor != 0 {
+                cursor-= 1;
+            } else {
+                cursor = (GRID*GRID)-1;
+            }
+            }
         if window.is_key_pressed(Key::RightBracket, minifb::KeyRepeat::Yes) { cursor += 1; if cursor >= GRID * GRID { cursor = 0; } }
         if window.is_key_pressed(Key::Equal, minifb::KeyRepeat::No) { pressed = Some(1); }
         if window.is_key_pressed(Key::Minus, minifb::KeyRepeat::No) { pressed = Some(0); }
+        if window.is_key_pressed(Key::Backspace, minifb::KeyRepeat::No) { grid_bits[cursor].pop(); }
+        if window.is_key_down(Key::Space) { visible = true; } else { visible = false; }
 
         if let Some(bit) = pressed {
             grid_bits[cursor].push(bit);
-            cursor += 1;
+            // cursor += 1;
             if cursor >= GRID * GRID { cursor = 0; }
         }
 
@@ -37,17 +46,36 @@ fn main() {
                 let idx = py * GRID + px;
 
                 let color = if idx == cursor {
-                    let bits = &grid_bits[idx];
-                    if bits.is_empty() {
-                        0xFF6600
-                    } else {
-                        let mut n: u64 = 0;
-                        for &b in bits.iter() {
-                            n = (n << 1) | b as u64;
+                    if visible == false {
+                        let bits = &grid_bits[idx];
+                        if bits.is_empty() {
+                            0xFF6600
+                        } else {
+                            let mut n: u64 = 0;
+                            for &b in bits.iter() {
+                                n = (n << 1) | b as u64;
+                            }
+                            let brightness = calculate_one(n);
+                            if brightness >= 0.1 {
+                                let v = (brightness * 255.0) as u32;
+                                (v << 16) | (v << 4) | v
+                            } else {
+                                0xFF6600
+                            }
                         }
-                        let brightness = calculate_one(n);
-                        let v = (brightness * 255.0) as u32;
-                        (v << 16) | (v << 4) | v
+                    } else {
+                        let bits = &grid_bits[idx];
+                        if bits.is_empty() {
+                            0x000000
+                        } else {
+                            let mut n: u64 = 0;
+                            for &b in bits.iter() {
+                                n = (n << 1) | b as u64;
+                            }
+                            let brightness = calculate_one(n);
+                            let v = (brightness * 255.0) as u32;
+                            (v << 16) | (v << 8) | v
+                        }
                     }
                 } else {
                     let bits = &grid_bits[idx];

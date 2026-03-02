@@ -42,3 +42,5 @@ change grid size in source code (am lazy)
 * 1 -> increase brightness
 * [ -> go left
 * ] -> go right
+* hold space -> make cursor invisible
+* backspace -> erase changes upon selected pixel
