@@ -1,14 +1,57 @@
 use mathlab::functions::*;
+use minifb::{Key, Window, WindowOptions};
+
+const GRID: usize = 32;
 
 fn main() {
-    let input:u64 = 4;
+    let mut window = Window::new("grid", 512, 512, WindowOptions {
+        resize: true,
+        ..Default::default()
+    }).unwrap();
+
+    let mut grid = [0u8; GRID * GRID]; // 0 = black, 1 = white
+    let mut cursor = 0; // current pixel index
+
+    while window.is_open() && !window.is_key_down(Key::Escape) {
+        let (w, h) = window.get_size();
+        let cell_w = w / GRID;
+        let cell_h = h / GRID;
+
+        // handle input
+        if window.is_key_pressed(Key::Key1, minifb::KeyRepeat::No) {
+            if cursor < GRID * GRID { grid[cursor] = 1; cursor += 1; }
+        }
+        if window.is_key_pressed(Key::Key0, minifb::KeyRepeat::No) {
+            if cursor < GRID * GRID { grid[cursor] = 0; cursor += 1; }
+        }
+
+        // draw
+        let mut buf = vec![0u32; w * h];
+        for py in 0..GRID {
+            for px in 0..GRID {
+                let color = if grid[py * GRID + px] == 1 { 0xFFFFFF } else { 0x000000 };
+                for dy in 0..cell_h {
+                    for dx in 0..cell_w {
+                        let sx = px * cell_w + dx;
+                        let sy = py * cell_h + dy;
+                        if sx < w && sy < h {
+                            buf[sy * w + sx] = color;
+                        }
+                    }
+                }
+            }
+        }
+
+        window.update_with_buffer(&buf, w, h).unwrap();
+    };
+    let input:u64 = 1;
     println!("i:{:b}", &input);
-    let length: i32 = (floor(log2(input as f64))+1.0) as i32;
-    // println!("l:{}",&length);
-    let mut res:f64 = 0.0;
-    calculate_one(length, input, res);
+    let res = calculate_one(input);
+    println!("{}",res)
 }
-fn calculate_one(length:i32,input:u64,mut res:f64) {
+fn calculate_one(input:u64) -> f64 {
+    let mut res:f64 = 0.0;
+    let length: i32 = (floor(log2(input as f64))+1.0) as i32;
     for index in 0..length {
         // println!("starting index {} with res {}", &index, &res);
         let quick:i32;
@@ -36,8 +79,13 @@ fn calculate_one(length:i32,input:u64,mut res:f64) {
         };
     };
     if res > 1.0 {
-        println!("{}>1 res=1", &res);
+        // println!("{}>1 res=1", &res);
         res = 1.0
     }
-    println!("ending with res:{}",&res)
+    return res
+}
+fn hexcodizer (res:f64) -> String  {
+    let p = (res*15.0) as i32;
+    let colour = format!("{:x}{:x}{:x}{:x}{:x}{:x}",p,p,p,p,p,p);
+    return colour
 }
