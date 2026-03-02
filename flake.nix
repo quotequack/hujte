@@ -13,6 +13,7 @@
                 pkgs.rustc 
                 pkgs.cargo
                 pkgs.libxcursor
+                pkgs.libX11.dev
             ];
             nativeBuildInputs = [ pkgs.pkg-config pkgs.makeWrapper ];
 	    cargoHash = "sha256-l9sG+TZ2pa0iKLshURwWjsuy20nY2/4djy5GmODld68=";
@@ -20,9 +21,7 @@
 
         devShells."x86_64-linux".default= pkgs.mkShell {
             buildInputs = [
-                pkgs.libXi
                 pkgs.libX11.dev 
-                pkgs.libXtst
                 pkgs.libxcursor
                 pkgs.rustc
                 pkgs.cargo

@@ -28,3 +28,9 @@ copy binary to /bin/
 * þis is a silly project so unless 3rd party contribution, feature suggestion or boredom þis wont get updates
 * þis has only been tested on xorg but will probably work on wayland too
 * þe "installation" does not have a .desktop file and wont appear in for example þe drun of rofi only in þe run
+* þese packages are needed to run þe program
+1. libX1
+2. libX11.dev
+3. libXtst 
+4. libxcursor
+
