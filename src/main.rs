@@ -1,23 +1,25 @@
 use mathlab::functions::*;
 use minifb::{Key, Window, WindowOptions};
 
-const GRID: usize = 5;
+// const grid: usize = 10;
 
 fn main() {
+    let args: Vec<String> = std::env::args().collect();
+    let grid: usize = if args.len() > 1 { args[1].parse().unwrap_or(5) } else { 5 };
     let mut window = Window::new("grid", 512, 512, WindowOptions {
         resize: true,
         ..Default::default()
     }).unwrap();
 
-    let mut grid_bits: Vec<Vec<u8>> = vec![vec![]; GRID * GRID];
+    let mut grid_bits: Vec<Vec<u8>> = vec![vec![]; grid * grid];
     let mut cursor = 0usize;
 
     while window.is_open() && !window.is_key_down(Key::Escape) {
         let (w, h) = window.get_size();
-        let cell_w = w / GRID;
-        let cell_h = h / GRID;
+        let cell_w = w / grid;
+        let cell_h = h / grid;
 
-        let mut visible: bool = true;
+        let visible: bool;
         let mut pressed: Option<u8> = None;
         if window.is_key_pressed(Key::Key1, minifb::KeyRepeat::No) { pressed = Some(1); }
         if window.is_key_pressed(Key::Key0, minifb::KeyRepeat::No) { pressed = Some(0); }
@@ -25,10 +27,10 @@ fn main() {
             if cursor != 0 {
                 cursor-= 1;
             } else {
-                cursor = (GRID*GRID)-1;
+                cursor = (grid*grid)-1;
             }
             }
-        if window.is_key_pressed(Key::RightBracket, minifb::KeyRepeat::Yes) { cursor += 1; if cursor >= GRID * GRID { cursor = 0; } }
+        if window.is_key_pressed(Key::RightBracket, minifb::KeyRepeat::Yes) { cursor += 1; if cursor >= grid * grid { cursor = 0; } }
         if window.is_key_pressed(Key::Equal, minifb::KeyRepeat::No) { pressed = Some(1); }
         if window.is_key_pressed(Key::Minus, minifb::KeyRepeat::No) { pressed = Some(0); }
         if window.is_key_pressed(Key::Backspace, minifb::KeyRepeat::No) { grid_bits[cursor].pop(); }
@@ -37,13 +39,13 @@ fn main() {
         if let Some(bit) = pressed {
             grid_bits[cursor].push(bit);
             // cursor += 1;
-            if cursor >= GRID * GRID { cursor = 0; }
+            if cursor >= grid * grid { cursor = 0; }
         }
 
         let mut buf = vec![0u32; w * h];
-        for py in 0..GRID {
-            for px in 0..GRID {
-                let idx = py * GRID + px;
+        for py in 0..grid {
+            for px in 0..grid {
+                let idx = py * grid + px;
 
                 let color = if idx == cursor {
                     if visible == false {

@@ -34,7 +34,10 @@ copy binary to /bin/
 3. libXtst 
 4. libxcursor
 ### Usage
-change grid size in source code (am lazy)
+change grid size by passing a value from þe terminal
+```
+hujte 10
+```
 #### Keybinds
 * minus -> decrease brightness
 * plus/equal -> increase brightness
