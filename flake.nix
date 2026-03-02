@@ -10,19 +10,9 @@
             name = "hujte";
             src = ./.;
             buildInputs = [
-                pkgs.cairo 
-                pkgs.gtk4 
-                pkgs.alsa-lib 
-                pkgs.xdotool 
-                pkgs.xorg.libXi 
-                pkgs.gcc 
-                pkgs.libinput.dev 
-                pkgs.systemdMinimal 
-                pkgs.xorg.libX11.dev 
-                pkgs.xorg.libXtst
                 pkgs.rustc 
                 pkgs.cargo
-		pkgs.pipewire
+                pkgs.libxcursor
             ];
             nativeBuildInputs = [ pkgs.pkg-config pkgs.makeWrapper ];
 	    cargoHash = "";
@@ -30,14 +20,9 @@
 
         devShells."x86_64-linux".default= pkgs.mkShell {
             buildInputs = [
-                pkgs.xorg.libXi
-                pkgs.gcc
-                pkgs.libinput.dev 
-                pkgs.systemdMinimal 
-                pkgs.xorg.libX11.dev 
-                pkgs.xorg.libXtst
-                pkgs.rustc
+                pkgs.rustc 
                 pkgs.cargo
+                pkgs.libxcursor
             ];
             nativeBuildInputs = [ pkgs.pkg-config ];
             env.RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
