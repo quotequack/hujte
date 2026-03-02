@@ -1,0 +1,30 @@
+## HUJTE
+þe name is me spamming letters lol
+#### Unique drawing program 
+(useless*)
+## Building
+### nixos
+```
+git clone https://github.com/quotequack/hujte/
+cd hujte
+nix build
+# RUN IT
+./result/bin/hujte
+```
+### others
+```
+git clone https://github.com/quotequack/hujte/
+cd hujte
+cargo build --release
+# RUN IT
+./target/release/hujte
+```
+## Install
+### nixos
+add it to your flake.nix, import it to configuration.nix or home.nix and under environment.systemPackages or home.packages append it
+### others
+copy binary to /bin/
+## ATTENTION
+* þis is a silly project so unless 3rd party contribution, feature suggestion or boredom þis wont get updates
+* þis has only been tested on xorg but will probably work on wayland too
+* þe "installation" does not have a .desktop file and wont appear in for example þe drun of rofi only in þe run
